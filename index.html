@@ -1,0 +1,644 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>S ! N Arch. Gallery</title>
+		<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+		   
+			body {
+				background: #050505;
+				color: white;
+				font-family: Cinzel;
+				overflow-x: hidden;
+			}
+		   
+			#particles {
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+				background-size: 50px 50px;
+				animation: move 40s linear infinite;
+				z-index: -1;
+			}
+		   
+			@keyframes move {
+				0% { background-position: 0 0; }
+				100% { background-position: 1000px 1000px; }
+			}
+
+			nav {
+				position: fixed;
+				left: 0;
+				top: 0;
+				width: 280px;
+				height: 100vh;
+				background: rgba(5, 5, 5, 0.96);
+				border-right: 1px solid #222;
+				padding: 40px 30px;
+				display: flex;
+				flex-direction: column;
+				z-index: 1000;
+				transform: translateX(-100%);
+				transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+				box-shadow: 5px 0 30px rgba(0, 0, 0, 0.7);
+			}
+
+			nav.show {
+				transform: translateX(0);
+			}
+
+			.logo {
+				font-family: UnifrakturCook;
+				font-size: 32px;
+				margin-bottom: 70px;
+				text-align: center;
+				opacity: 0;
+				transform: translateY(-30px);
+				transition: all 0.9s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s;
+			}
+
+			nav.show .logo {
+				opacity: 1;
+				transform: translateY(0);
+			}
+
+			nav ul {
+				display: flex;
+				flex-direction: column;
+				gap: 28px;
+				list-style: none;
+			}
+
+			nav a {
+				color: white;
+				text-decoration: none;
+				font-size: 18px;
+				padding: 10px 0;
+				position: relative;
+				transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+			}
+
+			nav a::after {
+				content: '';
+				position: absolute;
+				left: 0;
+				bottom: -4px;
+				width: 0;
+				height: 3px;
+				background: #ff0055;
+				transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+
+			nav a.active::after {
+				width: 40px;
+			}
+
+			nav a:hover {
+				color: #ff0055;
+				padding-left: 15px;
+			}
+
+			.main-content {
+				margin-left: 280px;
+				min-height: 100vh;
+				opacity: 0;
+				transition: opacity 1.2s ease;
+			}
+
+			.main-content.show {
+				opacity: 1;
+			}
+
+			.frontpage {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: #050505;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				z-index: 9999;
+				transition: opacity 1.2s ease, transform 1.2s ease;
+			}
+
+			.frontpage.hide {
+				opacity: 0;
+				transform: scale(0.95);
+				pointer-events: none;
+			}
+
+			.frontpage h1 {
+				font-family: UnifrakturCook;
+				font-size: 80px;
+				margin-bottom: 40px;
+				text-align: center;
+			}
+
+			.enter-btn {
+				padding: 20px 40px;
+				font-size: 24px;
+				font-family: Cinzel;
+				background: white;
+				color: black;
+				border: none;
+				cursor: pointer;
+				transition: all 0.4s ease;
+			}
+
+			.enter-btn:hover {
+				background: #ff0055;
+				color: white;
+				transform: scale(1.05);
+			}
+
+			.hero {
+				text-align: center;
+				padding: 120px 20px;
+			}
+		   
+			.hero h1 {
+				font-family: UnifrakturCook;
+				font-size: 70px;
+			}
+
+			.search {
+				text-align: center;
+				margin: 20px;
+			}
+		   
+			.search input {
+				padding: 12px;
+				width: 260px;
+				background: black;
+				color: white;
+				border: 1px solid #333;
+			}
+		   
+			.filters {
+				text-align: center;
+				margin: 20px;
+			}
+		   
+			.filters button {
+				padding: 10px 20px;
+				margin: 6px;
+				background: #111;
+				color: white;
+				border: 1px solid #444;
+				cursor: pointer;
+			}
+		   
+			.filters button:hover {
+				background: white;
+				color: black;
+			}
+		   
+			.gallery {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+				gap: 30px;
+				padding: 60px;
+			}
+		   
+			.card {
+				position: relative;
+				cursor: pointer;
+				border: 1px solid #222;
+				overflow: hidden;
+				transition: 0.4s;
+			}
+		   
+			.card:hover {
+				transform: translateY(-10px) scale(1.05);
+				box-shadow: 0 15px 40px rgba(255, 255, 255, 0.25);
+			}
+		   
+			.card img {
+				width: 100%;
+				height: 320px;
+				object-fit: cover;
+				transition: transform 0.4s ease;
+			}
+		   
+			.card img:hover {
+				transform: scale(1.1);
+			}
+		   
+			.info {
+				position: absolute;
+				bottom: 0;
+				background: rgba(0, 0, 0, 0.85);
+				width: 100%;
+				padding: 20px;
+				opacity: 0;
+				transition: 0.3s;
+			}
+		   
+			.card:hover .info {
+				opacity: 1;
+			}
+		   
+			.card .info a.brand-link h3 {
+				color: white;
+				text-decoration: none;
+				cursor: pointer;
+			}
+		   
+			.brand-gallery {
+				padding: 40px 20%;
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+				gap: 20px;
+				text-align: center;
+				display: none;
+			}
+		   
+			.brand-gallery img {
+				width: 100%;
+				height: auto;
+				object-fit: cover;
+				cursor: pointer;
+				transition: transform 0.4s ease;
+			}
+		   
+			.brand-gallery img:hover {
+				transform: scale(1.05);
+			}
+		   
+			.brand-gallery button {
+				grid-column: 1/-1;
+				padding: 10px 20px;
+				margin-bottom: 20px;
+				cursor: pointer;
+			}
+		   
+			#lightbox {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.95);
+				display: none;
+				justify-content: center;
+				align-items: center;
+				z-index: 999;
+			}
+		   
+			#lightbox img {
+				max-width: 90%;
+				max-height: 90%;
+				object-fit: cover;
+				transform: scale(0.5);
+				transition: transform 0.4s ease;
+			}
+		   
+			#lightbox.show img {
+				transform: scale(1);
+			}
+		   
+			section {
+				padding: 80px 20%;
+				text-align: center;
+			}
+		   
+			.operator {
+				background: #111;
+				padding: 30px;
+				border: 1px solid #333;
+				margin-top: 20px;
+			}
+		   
+			footer {
+				text-align: center;
+				padding: 40px;
+				border-top: 1px solid #222;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="frontpage" id="frontpage">
+			<h1>S ! N Arch. Gallery</h1>
+			<button class="enter-btn" onclick="enterSite()">Enter</button>
+		</div>
+
+		<div id="particles"></div>
+
+		<nav id="sidebar">
+			<div class="logo">S ! N Arch.</div>
+			<ul>
+				<li><a href="#home" class="nav-link active">Home</a></li>
+				<li><a href="#gallery" class="nav-link">Gallery</a></li>
+				<li><a href="#about" class="nav-link">About</a></li>
+				<li><a href="#operator" class="nav-link">Operator</a></li>
+			</ul>
+		</nav>
+
+		<div class="main-content" id="main-content">
+			<section class="hero" id="home">
+				<h1>S ! N Arch. Gallery</h1>
+				<p>Philippine Streetwear Digital Archive</p>
+			</section>
+
+			<div class="search">
+				<input type="text" id="searchInput" placeholder="Search brand..." onkeyup="searchBrand()">
+			</div>
+
+			<div class="filters">
+				<button onclick="showBrandGallery('all')">All</button>
+				<button onclick="showBrandGallery('dbtk')">DBTK</button>
+				<button onclick="showBrandGallery('mnla')">MN+LA</button>
+				<button onclick="showBrandGallery('syndrome')">Syndrome</button>
+				<button onclick="showBrandGallery('charlotte')">Charlotte Folk</button>
+				<button onclick="showBrandGallery('richboyz')">Richboyz</button>
+				<button onclick="showBrandGallery('prettiest')">Prettiest</button>
+				<button onclick="showBrandGallery('hso')">HSO</button>
+			</div>
+
+			<section class="gallery" id="gallery">
+				<div class="card dbtk main">
+					<img src="DBTK LOGO.JPG" onclick="showBrandGallery('dbtk')">
+					<div class="info">
+						<a href="https://dbtkco.com/" target="_blank" class="brand-link"><h3>DBTK</h3></a>
+					</div>
+				</div>
+				<div class="card mnla main">
+					<img src="MANILA LOGO.PNG" onclick="showBrandGallery('mnla')">
+					<div class="info">
+						<a href="https://mn-la.com/" target="_blank" class="brand-link"><h3>MN+LA</h3></a>
+					</div>
+				</div>
+				<div class="card syndrome main">
+					<img src="SYNDROME.PNG" onclick="showBrandGallery('syndrome')">
+					<div class="info">
+						<a href="https://syndromesupply.com/" target="_blank" class="brand-link"><h3>Syndrome</h3></a>
+					</div>
+				</div>
+				<div class="card charlotte main">
+					<img src="CHARLOTTE FOLK.PNG" onclick="showBrandGallery('charlotte')">
+					<div class="info">
+						<a href="https://charlottefolk.co" target="_blank" class="brand-link"><h3>Charlotte Folk</h3></a>
+					</div>
+				</div>
+				<div class="card richboyz main">
+					<img src="RICHBOYZ.WEBP" onclick="showBrandGallery('richboyz')">
+					<div class="info">
+						<a href="https://richboyz.com/" target="_blank" class="brand-link"><h3>Richboyz</h3></a>
+					</div>
+				</div>
+				<div class="card prettiest main">
+					<img src="PRETTIES LOGO.JFIF" onclick="showBrandGallery('prettiest')">
+					<div class="info">
+						<a href="https://prettiestph.com/" target="_blank" class="brand-link"><h3>Prettiest</h3></a>
+					</div>
+				</div>
+				<div class="card hso main">
+					<img src="HSO LOGO.WEBP" onclick="showBrandGallery('hso')">
+					<div class="info">
+						<a href="https://hso.com.ph/" target="_blank" class="brand-link"><h3>HSO</h3></a>
+					</div>
+				</div>
+			</section>
+
+			<div id="dbtk-gallery" class="brand-gallery">
+				<button onclick="backToMain()">← Back</button>
+				<img src="DBTK CREAM.WEBP" onclick="openLightbox(this)">
+				<img src="DBTK HOODIE.WEBP" onclick="openLightbox(this)">
+				<img src="DBTK HOODIE BLACK.WEBP" onclick="openLightbox(this)">
+				<img src="DBTK BLACK FLOWERS.WEBP" onclick="openLightbox(this)">
+				<img src="DBTK BEIGE.WEBP" onclick="openLightbox(this)">
+				<img src="DBTK RACER.WEBP" onclick="openLightbox(this)">
+				<img src="DBTK SHIRT LOGO.WEBP" onclick="openLightbox(this)">
+				<img src="DBTK WIDE PANTS.WEBP" onclick="openLightbox(this)">
+				<img src="DBTK ELEMENTARY PANTS.WEBP" onclick="openLightbox(this)">
+				<img src="DBTK HADMADE.WEBP" onclick="openLightbox(this)">
+			</div>
+			<div id="mnla-gallery" class="brand-gallery">
+				<button onclick="backToMain()">← Back</button>
+				<img src="MANILA WHITE LONG.WEBP" onclick="openLightbox(this)">
+				<img src="MANILA BLACK TSHIRT.WEBP" onclick="openLightbox(this)">
+				<img src="MANILA BLACK LONG.WEBP" onclick="openLightbox(this)">
+				<img src="MANILA MILITIA LONG.WEBP" onclick="openLightbox(this)">
+				<img src="MANILA MILITIA PANTS.WEBP" onclick="openLightbox(this)">
+				<img src="MANILA DEAD INSIDE.WEBP" onclick="openLightbox(this)">
+				<img src="MANILA MANDARIN.WEBP" onclick="openLightbox(this)">
+				<img src="MANILA SUN SEEKER.WEBP" onclick="openLightbox(this)">
+				<img src="MANILA DOJO PANTS.WEBP" onclick="openLightbox(this)">
+				<img src="MANILA CRAFTSMAN.WEBP" onclick="openLightbox(this)">
+			</div>
+			<div id="syndrome-gallery" class="brand-gallery">
+				<button onclick="backToMain()">← Back</button>
+				<img src="SYNDROME FUTBOL JERSEY.WEBP" onclick="openLightbox(this)">
+				<img src="SYNDROME FC.WEBP" onclick="openLightbox(this)">
+				<img src="SYNDROME THUNDER.WEBP" onclick="openLightbox(this)">
+				<img src="SYNDROME HOODIE.WEBP" onclick="openLightbox(this)">
+				<img src="SYNDROME ALTER EGO POLO.WEBP" onclick="openLightbox(this)">
+				<img src="SYNDROME BLACK POLO.WEBP" onclick="openLightbox(this)">
+				<img src="SYNDROME BAG.WEBP" onclick="openLightbox(this)">
+				<img src="SYNDROME KRISPY CREAM.WEBP" onclick="openLightbox(this)">
+				<img src="SYNDROME DELUSIONAL.WEBP" onclick="openLightbox(this)">
+				<img src="SYNDROME SHIRT.WEBP" onclick="openLightbox(this)">
+			</div>
+			<div id="charlotte-gallery" class="brand-gallery">
+				<button onclick="backToMain()">← Back</button>
+				<img src="CF HOODIE.WEBP" onclick="openLightbox(this)">
+				<img src="CF FOOTBALL.JFIF" onclick="openLightbox(this)">
+				<img src="CF UNIVERSITY.JFIF" onclick="openLightbox(this)">
+				<img src="CF HOODIEE.WEBP" onclick="openLightbox(this)">
+				<img src="CHARLOTTE DENIM CAP.WEBP" onclick="openLightbox(this)">
+				<img src="NY TRACK PANTS.WEBP" onclick="openLightbox(this)">
+				<img src="CLASSIC TSHIRT.JFIF" onclick="openLightbox(this)">
+				<img src="NY TRACK BLACK.WEBP" onclick="openLightbox(this)">
+				<img src="CFF.JFIF" onclick="openLightbox(this)">
+				<img src="FOOTBALL.JFIF" onclick="openLightbox(this)">
+			</div>
+			<div id="richboyz-gallery" class="brand-gallery">
+				<button onclick="backToMain()">← Back</button>
+				<img src="RICHBOYZ HOODIE.WEBP" onclick="openLightbox(this)">
+				<img src="RICHBOYZ HOODIE BLUE.WEBP" onclick="openLightbox(this)">
+				<img src="RB PANTS BLACK.WEBP" onclick="openLightbox(this)">
+				<img src="RB PANTS.WEBP" onclick="openLightbox(this)">
+				<img src="RB SHORTS SOIL.WEBP" onclick="openLightbox(this)">
+				<img src="RB SHORTS.WEBP" onclick="openLightbox(this)">
+				<img src="RB SWEAT PANTS.WEBP" onclick="openLightbox(this)">
+				<img src="RB KNITTED PANTS.WEBP" onclick="openLightbox(this)">
+				<img src="RB RACING SHIRT.WEBP" onclick="openLightbox(this)">
+				<img src="RB SHIRT WHITE.WEBP" onclick="openLightbox(this)">
+			</div>
+			<div id="prettiest-gallery" class="brand-gallery">
+				<button onclick="backToMain()">← Back</button>
+				<img src="PRETTIES POLO RED.WEBP" onclick="openLightbox(this)">
+				<img src="PRETTIES POLO YELLOW.WEBP" onclick="openLightbox(this)">
+				<img src="PRETTIES POLO BLACK.WEBP" onclick="openLightbox(this)">
+				<img src="PRETTIES COLAR.WEBP" onclick="openLightbox(this)">
+				<img src="PRETTIES POLO.WEBP" onclick="openLightbox(this)">
+				<img src="PRETTIES SHIRT CARBON.WEBP" onclick="openLightbox(this)">
+				<img src="PRETTIES HOODIE BLACK.WEBP" onclick="openLightbox(this)">
+				<img src="PRETTIES SKULL.WEBP" onclick="openLightbox(this)">
+				<img src="PRETTIES CAP.WEBP" onclick="openLightbox(this)">
+				<img src="PRETTIES MERCE.WEBP" onclick="openLightbox(this)">
+			</div>
+			<div id="hso-gallery" class="brand-gallery">
+				<button onclick="backToMain()">← Back</button>
+				<img src="HSO SLEEVE.JPG" onclick="openLightbox(this)">
+				<img src="HSO JORTS.JPG" onclick="openLightbox(this)">
+				<img src="HSO DENIM PANTS.WEBP" onclick="openLightbox(this)">
+				<img src="HSO DENIM WHITE.WEBP" onclick="openLightbox(this)">
+				<img src="HSO FLOWERS.WEBP" onclick="openLightbox(this)">
+				<img src="HSO OFF WHITE.WEBP" onclick="openLightbox(this)">
+				<img src="HSO DENIM JACKET.JPG" onclick="openLightbox(this)">
+				<img src="HSO WHITE TEE.WEBP" onclick="openLightbox(this)">
+				<img src="HSO BROWN.WEBP" onclick="openLightbox(this)">
+				<img src="HSO WHAAA.WEBP" onclick="openLightbox(this)">
+			</div>
+
+			<div id="lightbox" onclick="closeLightbox()">
+				<img id="lightbox-img">
+			</div>
+
+			<section id="about">
+				<h2>About S ! N Arch.</h2>
+				<br>
+				<p>Philippine streetwear archive platform.</p>
+				<br>
+				<p>S ! N Arch. Gallery is a digital fashion archive dedicated to documenting and showcasing the evolution of Philippine streetwear culture. The platform highlights influential local brands such as DBTK, MN+LA, Syndrome Supply, Charlotte Folk, RICHBOYZ, Prettiest, and HSO Brand.</p>
+				<br>
+				<p>The gallery serves as a curated space where fashion, culture, and design intersect, allowing visitors to explore collections, visual campaigns, and brand identities that shape the Philippine streetwear scene. Through this archive, S ! N Arch. Gallery aims to preserve the creativity, innovation, and cultural influence of local designers while inspiring the next generation of fashion enthusiasts and creators.</p>
+			</section>
+
+			<section id="operator">
+				<h2>Website Operator</h2>
+				<div class="operator">
+					<h3><a href="https://www.facebook.com/sean.kk.tt" target="_blank">Sean Kent Yael B. Nova</a></h3>
+                <p><b>Role:</b> Owner/Founder</p>
+
+                <h3><a href="https://www.facebook.com/carl.esber.2025" target="_blank">Carl Arkin R. Esber</a></h3>
+                <p><b>Role:</b> UI Moderator</p>
+
+                <h3><a href="https://www.facebook.com/pao.gaerlan.2024" target="_blank">Pao V. Gaerlan</a></h3>
+                <p><b>Role:</b> Website Moderator</p>
+
+                <h3><a href="https://www.facebook.com/profile.php?id=61583298208417" target="_blank">Ryan Vincent E. Inutan</a></h3>
+                <p><b>Role:</b> Assistant UI Moderator</p>
+
+                <h3><a href="https://www.facebook.com/mrknthynrqz" target="_blank">Mark Anthony A. Enriquez</a></h3>
+                <p><b>Role:</b> Assistant Website Moderator</p>
+				</div>
+			</section>
+
+			<footer>S ! N Arch. Gallery — Philippine Streetwear Archive</footer>
+		</div>
+
+		<script>
+			window.addEventListener('load', () => {
+				setTimeout(() => {
+					document.getElementById('sidebar').classList.add('show');
+				}, 600);
+			});
+
+			function enterSite() {
+				const frontpage = document.getElementById('frontpage');
+				const mainContent = document.getElementById('main-content');
+				frontpage.classList.add('hide');
+				setTimeout(() => {
+					frontpage.style.display = 'none';
+					mainContent.classList.add('show');
+				}, 1200);
+			}
+
+			const navLinks = document.querySelectorAll('nav a');
+			const sections = ['home', 'gallery', 'about', 'operator'];
+
+			function updateActiveLink() {
+				let current = 'home';
+				sections.forEach(id => {
+					const section = document.getElementById(id);
+					if (section && scrollY >= section.offsetTop - 200) {
+						current = id;
+					}
+				});
+				navLinks.forEach(link => {
+					link.classList.remove('active');
+					if (link.getAttribute('href') === '#' + current) {
+						link.classList.add('active');
+					}
+				});
+			}
+
+			window.addEventListener('scroll', updateActiveLink);
+
+			navLinks.forEach(link => {
+				link.addEventListener('click', function(e) {
+					e.preventDefault();
+					const targetId = this.getAttribute('href').substring(1);
+					const target = document.getElementById(targetId);
+					if (target) {
+						navLinks.forEach(a => a.classList.remove('active'));
+						this.classList.add('active');
+						setTimeout(() => {
+							target.scrollIntoView({ behavior: 'smooth' });
+						}, 80);
+					}
+				});
+			});
+
+			function showBrandGallery(brand) {
+				if (brand === "all") {
+					document.querySelector('.gallery').style.display = 'grid';
+					document.querySelectorAll('.brand-gallery').forEach(g => g.style.display = 'none');
+					return;
+				}
+				document.querySelector('.gallery').style.display = 'none';
+				document.querySelectorAll('.brand-gallery').forEach(g => g.style.display = 'none');
+				const gallery = document.getElementById(brand + '-gallery');
+				if (gallery) gallery.style.display = 'grid';
+			}
+
+			function backToMain() {
+				document.querySelector('.gallery').style.display = 'grid';
+				document.querySelectorAll('.brand-gallery').forEach(g => g.style.display = 'none');
+			}
+
+			function openLightbox(imgElement) {
+				const lightbox = document.getElementById('lightbox');
+				const lightboxImg = document.getElementById('lightbox-img');
+				lightbox.style.display = 'flex';
+				lightboxImg.src = imgElement.src;
+				setTimeout(() => lightbox.classList.add('show'), 10);
+			}
+
+			function closeLightbox() {
+				const lightbox = document.getElementById('lightbox');
+				lightbox.classList.remove('show');
+				setTimeout(() => lightbox.style.display = 'none', 300);
+			}
+
+			function searchBrand() {
+				let input = document.getElementById("searchInput").value.toLowerCase();
+				const brands = ["dbtk", "mnla", "syndrome", "charlotte", "richboyz", "prettiest", "hso"];
+				if (input === "") {
+					document.querySelector('.gallery').style.display = 'grid';
+					document.querySelectorAll('.brand-gallery').forEach(g => g.style.display = 'none');
+					return;
+				}
+				let found = brands.find(b => b.includes(input));
+				if (found) showBrandGallery(found);
+				else {
+					document.querySelector('.gallery').style.display = 'grid';
+					document.querySelectorAll('.brand-gallery').forEach(g => g.style.display = 'none');
+				}
+			}
+		</script>
+	</body>
+	</html>
